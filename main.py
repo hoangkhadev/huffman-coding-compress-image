@@ -15,6 +15,7 @@ def update_ui():
         decompress_button.pack(pady=5)
         compression_ratio_label.pack(pady=5)
         compression_time_label.pack(pady=5)
+        complete_label.pack(pady=5)
 
 def browse_image_path():
     image_path = filedialog.askopenfilename(filetypes=[("Tệp hình ảnh", "*.jpg *.jpeg *.png *.bin")])
@@ -43,11 +44,12 @@ def compress_image():
             if compressed_image_bit_string:
                 compressed_path = "io/outputs/compressed_image.bin"
                 binary_data_handler.save_data(compressed_image_bit_string, compressed_path, 'image')
-                compression_ratio = len(image_bit_string) / len(compressed_image_bit_string)
+                compression_ratio = len(compressed_image_bit_string) / len(image_bit_string)
                 compression_ratio_label.config(text=f"Tỷ lệ nén (CR): {compression_ratio:.2f}")
                 
                 elapsed_time = time.time() - start_time
                 compression_time_label.config(text=f"Thời gian nén: {elapsed_time:.2f}s")
+                complete_label.config(text="Nén ảnh hoàn tất!")
             else:
                 messagebox.showerror("Lỗi", "Nén hình ảnh không thành công.")
             
@@ -74,7 +76,7 @@ def decompress_image():
         decompressed_image_bit_string = huffman.decompress_data(compressed_image_bit_string, huffman_codes)
         decompressed_path = "io/outputs/decompressed_image.jpg"
         binary_data_handler.save_data(decompressed_image_bit_string, decompressed_path, 'image')
-        decompression_complete_label.config(text="Giải nén hoàn tất!")
+        complete_label.config(text="Giải nén hoàn tất!")
     else:
         messagebox.showerror("Lỗi", "Giải nén không thành công. Không tìm thấy hình ảnh đã nén.")
 
@@ -102,7 +104,7 @@ compress_button = ttk.Button(root, text="Nén ảnh", command=compress_image, st
 decompress_button = ttk.Button(root, text="Giải nén", command=decompress_image, style='Accent.TButton')
 compression_ratio_label = ttk.Label(root, text="Tỷ lệ nén (CR):", background="#e0f7fa", font=("Arial", 12))
 compression_time_label = ttk.Label(root, text="Thời gian nén: 0.00s", background="#e0f7fa", font=("Arial", 12)) #New code
-decompression_complete_label = ttk.Label(root, text="", background="#e0f7fa", font=("Arial", 12))
+complete_label = ttk.Label(root, text="", background="#e0f7fa", font=("Arial", 12))
 
 # Cấu hình kiểu cho nút
 style.configure('Accent.TButton', background="#64b5f6", foreground="white", font=("Arial", 12), borderwidth=1)
